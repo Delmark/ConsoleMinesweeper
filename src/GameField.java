@@ -9,7 +9,11 @@ public class GameField {
 
 
     public GameField(int FIELD_SIZE, int BOMB_COUNT) {
-        this.FIELD_SIZE = FIELD_SIZE;
+        if (FIELD_SIZE <= 1) {
+            System.out.print("Размер поля должен быть корректным!");
+            this.FIELD_SIZE = 3;
+        }
+        else this.FIELD_SIZE = FIELD_SIZE;
         if (BOMB_COUNT >= FIELD_SIZE*FIELD_SIZE) {
             System.out.print("Количество бомб должно быть меньше чем игровое поле");
             this.BOMB_COUNT = (FIELD_SIZE*FIELD_SIZE - 1) / 2;
@@ -25,7 +29,7 @@ public class GameField {
         for (int i = 0; i < FIELD_SIZE; i++) {
             for (int j = 0; j < FIELD_SIZE; j++) {
                 Integer[] fieldCords = new Integer[] {i,j};
-                if (hasCoords(bombsCoords, fieldCords)) {
+                if (compareCoords(bombsCoords, fieldCords)) {
                     field[i][j] = new Cell(true);
                 }
             }
@@ -142,7 +146,7 @@ public class GameField {
         for (int i = 0; i < BOMB_COUNT; i++) {
             Integer[] bombPos = {random.nextInt(FIELD_SIZE),random.nextInt(FIELD_SIZE)};
 
-            while (hasCoords(bombCoords, bombPos)) {
+            while (compareCoords(bombCoords, bombPos)) {
                 bombPos[0] = random.nextInt(FIELD_SIZE);
                 bombPos[1] = random.nextInt(FIELD_SIZE);
             }
@@ -157,7 +161,7 @@ public class GameField {
         return FIELD_SIZE;
     }
 
-    public boolean hasCoords(List<Integer[]> list, Integer[] pos) {
+    public boolean compareCoords(List<Integer[]> list, Integer[] pos) {
         for (Integer[] listPos : list) {
             if (Arrays.equals(listPos, pos)) {
                 return true;

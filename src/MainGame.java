@@ -1,4 +1,3 @@
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class MainGame {
@@ -10,11 +9,7 @@ public class MainGame {
 
         while (true) {
 
-            System.out.println("Простая реализация игры в Сапёра.\nУ вас есть два действия, выбрать ячейку или поставить на неё флаг");
-            System.out.println("Команда для выбора ячейки \"O {Строка} {Столбец}\"");
-            System.out.println("Команда для постановки флага на ячейку \"F {Строка} {Столбец}\"");
-            System.out.println("Победой считается если все бомбы в игре будут помечены флагом, поражением если будет открыта ячейка с бомбой.");
-            System.out.println("Чтобы убрать флаг с ячейки, требуется снова ввести команду постановки флага на нужную ячейку.");
+            introductionToGame();
 
             for (int i = 0; i < 2; i++) {
                 System.out.println();
@@ -48,7 +43,7 @@ public class MainGame {
                         }
                         if (playerDiff[0] < 0 || playerDiff[1] < 0) System.out.println("Некорректный ввод");
                         else gameField = new GameField(playerDiff[0], playerDiff[1]);
-                    } catch (InputMismatchException mismatchException) {
+                    } catch (NumberFormatException numberFormatException) {
                         System.out.println("Вы должны ввести только числа!");
                     } catch (IndexOutOfBoundsException boundsException) {
                         System.out.println("Вы должны ввести только два числа: {Размер поля} и {Количество бомб}");
@@ -81,26 +76,40 @@ public class MainGame {
                     gameField.fieldAction(action,row,column);
                     if (inGame && gameField.checkVictory()) {
                         System.out.println("Победа!");
+                        gameField.printField();
+                        Thread.sleep(2000);
                         break;
                     }
                     Thread.sleep(1000);
                 }
                 else {
-                    System.out.println("Неверный ввод команды");
-                    System.out.println("Команда для выбора ячейки \"O {Строка} {Столбец}\"");
-                    System.out.println("Команда для постановки флага на ячейку \"F {Строка} {Столбец}\"");
+                    printInvalidCommand();
                     Thread.sleep(1000);
                 }
 
             }
             catch (NumberFormatException numberFormatException) {
-                System.out.println("Неверный ввод команды!");
-                System.out.println("Команда для выбора ячейки \"O {Строка} {Столбец}\"");
-                System.out.println("Команда для постановки флага на ячейку \"F {Строка} {Столбец}\"");
+                printInvalidCommand();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+            catch (IndexOutOfBoundsException boundsException) {
+                System.out.println("Некорректный ввод!");
+            }
 
         }
+    }
+
+    private static void introductionToGame() {
+        System.out.println("Простая реализация игры в Сапёра.\nУ вас есть два действия, выбрать ячейку или поставить на неё флаг");
+        System.out.println("Команда для выбора ячейки \"O {Строка} {Столбец}\"");
+        System.out.println("Команда для постановки флага на ячейку \"F {Строка} {Столбец}\"");
+        System.out.println("Победой считается если все бомбы в игре будут помечены флагом, поражением если будет открыта ячейка с бомбой.");
+        System.out.println("Чтобы убрать флаг с ячейки, требуется снова ввести команду постановки флага на нужную ячейку.");
+    }
+    private static void printInvalidCommand() {
+        System.out.println("Неверный ввод команды!");
+        System.out.println("Команда для выбора ячейки \"O {Строка} {Столбец}\"");
+        System.out.println("Команда для постановки флага на ячейку \"F {Строка} {Столбец}\"");
     }
 }
